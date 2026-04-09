@@ -4,7 +4,7 @@ export function ActivityDot({ type }: { type: string }) {
       ? "bg-sky-500"
       : type === "call"
         ? "bg-violet-500"
-        : type === "assistance"
+        : type === "assistance" || type === "expense"
           ? "bg-amber-500"
           : "bg-stone-400";
   return (

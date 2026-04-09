@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 
 export type FinancialStats = {
-  assistance_this_month: number;
-  assistance_all_time: number;
+  expenses_this_month: number;
+  expenses_all_time: number;
   donations_all_time: number;
 };
 
@@ -65,8 +65,8 @@ export async function loadDashboardData(): Promise<DashboardData> {
   if (!statsRes.error && statsRes.data?.length) {
     const row = statsRes.data[0] as Record<string, unknown>;
     stats = {
-      assistance_this_month: toNum(row.assistance_this_month),
-      assistance_all_time: toNum(row.assistance_all_time),
+      expenses_this_month: toNum(row.expenses_this_month ?? row.assistance_this_month),
+      expenses_all_time: toNum(row.expenses_all_time ?? row.assistance_all_time),
       donations_all_time: toNum(row.donations_all_time),
     };
   }

@@ -42,28 +42,24 @@ export async function getNeighborsWithAssistanceTotals(): Promise<
 > {
   const supabase = await createClient();
 
-  const [{ data: neighbors, error: nErr }, { data: assistance }] = await Promise.all([
-    supabase
-      .from("neighbors")
-      .select(NEIGHBOR_ROW_SELECT)
-      .order("full_name", { ascending: true }),
-    supabase.from("financial_assistance").select("neighbor_id, amount"),
-  ]);
+  const { data, error } = await supabase
+    .from("neighbors_with_assistance_totals")
+    .select(`${NEIGHBOR_ROW_SELECT}, assistance_total`)
+    .order("full_name", { ascending: true });
 
-  if (nErr || !neighbors) {
+  if (error || !data) {
     return [];
   }
 
-  const totals = new Map<string, number>();
-  for (const row of assistance ?? []) {
-    const nid = row.neighbor_id as string;
-    const amt = typeof row.amount === "string" ? parseFloat(row.amount) : Number(row.amount);
-    totals.set(nid, (totals.get(nid) ?? 0) + (Number.isFinite(amt) ? amt : 0));
-  }
-
-  return neighbors.map((n) => {
-    const row = n as unknown as NeighborRow;
-    return { ...row, assistance_total: totals.get(row.id) ?? 0 };
+  return data.map((n) => {
+    const row = n as NeighborRow & { assistance_total: unknown };
+    const raw = row.assistance_total;
+    const assistance_total =
+      typeof raw === "string" ? parseFloat(raw) : Number(raw);
+    return {
+      ...row,
+      assistance_total: Number.isFinite(assistance_total) ? assistance_total : 0,
+    };
   });
 }
 
@@ -164,10 +160,10 @@ export async function getCallsForNeighbor(neighborId: string): Promise<CallListI
 export async function getAssistanceForNeighbor(neighborId: string) {
   const supabase = await createClient();
   const { data } = await supabase
-    .from("financial_assistance")
-    .select("id, amount, currency, assistance_date, category, notes, check_number, created_at, recorded_by, users(full_name)")
+    .from("expenses")
+    .select("id, amount, currency, expense_date, category, notes, check_number, created_at, recorded_by, users(full_name)")
     .eq("neighbor_id", neighborId)
-    .order("assistance_date", { ascending: false });
+    .order("expense_date", { ascending: false });
 
   if (!data?.length) return [];
 
@@ -175,7 +171,7 @@ export async function getAssistanceForNeighbor(neighborId: string) {
     id: row.id,
     amount: row.amount,
     currency: row.currency,
-    assistance_date: row.assistance_date,
+    assistance_date: row.expense_date,
     category: row.category,
     notes: row.notes,
     check_number: row.check_number,
@@ -186,7 +182,7 @@ export async function getAssistanceForNeighbor(neighborId: string) {
 
 export async function getAssistanceSumForNeighbor(neighborId: string): Promise<number> {
   const supabase = await createClient();
-  const { data, error } = await supabase.rpc("sum_financial_assistance_for_neighbor", {
+  const { data, error } = await supabase.rpc("sum_expenses_for_neighbor", {
     p_neighbor_id: neighborId,
   });
   if (!error && data !== null && data !== undefined) {
@@ -263,12 +259,29 @@ export const getAssistanceForNeighborEdit = cache(async function getAssistanceFo
 ): Promise<NeighborAssistanceEditRow | null> {
   const supabase = await createClient();
   const { data, error } = await supabase
-    .from("financial_assistance")
-    .select("id, amount, currency, assistance_date, category, notes, check_number")
+    .from("expenses")
+    .select("id, amount, currency, expense_date, category, notes, check_number")
     .eq("id", assistanceId)
     .eq("neighbor_id", neighborId)
     .maybeSingle();
 
   if (error || !data) return null;
-  return data as NeighborAssistanceEditRow;
+  const row = data as {
+    id: string;
+    amount: number | string;
+    currency: string;
+    expense_date: string;
+    category: string;
+    notes: string | null;
+    check_number: string | null;
+  };
+  return {
+    id: row.id,
+    amount: row.amount,
+    currency: row.currency,
+    assistance_date: row.expense_date,
+    category: row.category,
+    notes: row.notes,
+    check_number: row.check_number,
+  };
 });

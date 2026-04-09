@@ -230,11 +230,11 @@ export async function createFinancialAssistance(neighborId: string, formData: Fo
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { error } = await supabase.from("financial_assistance").insert({
+  const { error } = await supabase.from("expenses").insert({
     chapter_id: chapterId,
     neighbor_id: neighborId,
     amount,
-    assistance_date,
+    expense_date: assistance_date,
     category,
     check_number: str(formData.get("check_number")),
     notes: str(formData.get("notes")),
@@ -248,7 +248,8 @@ export async function createFinancialAssistance(neighborId: string, formData: Fo
   revalidatePath(`/neighbors/${neighborId}/assistance`);
   revalidatePath(`/neighbors/${neighborId}`);
   revalidatePath("/neighbors");
-  revalidatePath("/assistance");
+  revalidatePath("/expenses");
+  revalidatePath("/finances");
   revalidatePath("/dashboard");
   redirect(`/neighbors/${neighborId}/assistance`);
 }
@@ -369,10 +370,10 @@ export async function updateFinancialAssistance(
 
   const supabase = await createClient();
   const { error } = await supabase
-    .from("financial_assistance")
+    .from("expenses")
     .update({
       amount,
-      assistance_date,
+      expense_date: assistance_date,
       category,
       check_number: str(formData.get("check_number")),
       notes: str(formData.get("notes")),
@@ -391,7 +392,8 @@ export async function updateFinancialAssistance(
   revalidatePath(`/neighbors/${neighborId}/assistance`);
   revalidatePath(`/neighbors/${neighborId}`);
   revalidatePath("/neighbors");
-  revalidatePath("/assistance");
+  revalidatePath("/expenses");
+  revalidatePath("/finances");
   revalidatePath("/dashboard");
   redirect(`/neighbors/${neighborId}/assistance`);
 }

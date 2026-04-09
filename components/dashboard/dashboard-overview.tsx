@@ -36,6 +36,8 @@ type Props = {
   rpcMissing: boolean;
   neighborCount: number;
   myTasks: TaskListRow[];
+  /** When false, hide conference financial totals (volunteers). */
+  showFinancialSummary?: boolean;
 };
 
 export function DashboardOverview({
@@ -45,6 +47,7 @@ export function DashboardOverview({
   rpcMissing,
   neighborCount,
   myTasks,
+  showFinancialSummary = true,
 }: Props) {
   return (
     <div className="space-y-10">
@@ -60,27 +63,33 @@ export function DashboardOverview({
 
       <section>
         <h2 className="text-sm font-medium uppercase tracking-wide text-muted">Overview</h2>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div
+          className={`mt-3 grid gap-3 sm:grid-cols-2 ${showFinancialSummary ? "xl:grid-cols-4" : "xl:grid-cols-1 max-w-md"}`}
+        >
           <StatWidget
             label="Active neighbors"
             value={String(neighborCount)}
             viewAllHref="/neighbors"
           />
-          <StatWidget
-            label="Assistance (this month)"
-            value={stats ? money.format(stats.assistance_this_month) : "—"}
-            viewAllHref="/assistance"
-          />
-          <StatWidget
-            label="Assistance (all-time)"
-            value={stats ? money.format(stats.assistance_all_time) : "—"}
-            viewAllHref="/assistance"
-          />
-          <StatWidget
-            label="Donations (all-time)"
-            value={stats ? money.format(stats.donations_all_time) : "—"}
-            viewAllHref="/donations"
-          />
+          {showFinancialSummary ? (
+            <>
+              <StatWidget
+                label="Expenses (this month)"
+                value={stats ? money.format(stats.expenses_this_month) : "—"}
+                viewAllHref="/expenses"
+              />
+              <StatWidget
+                label="Expenses (all-time)"
+                value={stats ? money.format(stats.expenses_all_time) : "—"}
+                viewAllHref="/expenses"
+              />
+              <StatWidget
+                label="Donations (all-time)"
+                value={stats ? money.format(stats.donations_all_time) : "—"}
+                viewAllHref="/donations"
+              />
+            </>
+          ) : null}
         </div>
       </section>
 
@@ -145,7 +154,7 @@ export function DashboardOverview({
             <h2 className="text-sm font-medium uppercase tracking-wide text-muted">
               Recent assistance
             </h2>
-            <p className="mt-1 text-xs text-muted">Newest entries across all neighbors.</p>
+            <p className="mt-1 text-xs text-muted">Newest neighbor assistance expenses.</p>
           </div>
           <div className="mt-4 overflow-hidden rounded-lg border border-border bg-card">
             <table className="w-full text-left text-sm">

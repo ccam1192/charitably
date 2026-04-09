@@ -6,10 +6,10 @@ import { usePathname } from "next/navigation";
 const tabs = (id: string) =>
   [
     { href: `/neighbors/${id}`, label: "Overview" },
-    { href: `/neighbors/${id}/finances`, label: "Finances" },
     { href: `/neighbors/${id}/visits`, label: "Visits" },
     { href: `/neighbors/${id}/calls`, label: "Calls" },
     { href: `/neighbors/${id}/assistance`, label: "Assistance" },
+    { href: `/neighbors/${id}/finances`, label: "Finances" },
     { href: `/neighbors/${id}/tasks`, label: "Tasks" },
   ] as const;
 

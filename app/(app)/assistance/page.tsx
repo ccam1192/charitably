@@ -1,6 +1,9 @@
 import Link from "next/link";
-import { getAssistanceConferenceSummary, getAssistancePage } from "@/lib/data/assistance";
-import { formatAssistanceCategoryLabel } from "@/lib/financial-assistance";
+import {
+  getExpensesPage,
+  getNeighborAssistanceSummary,
+} from "@/lib/data/assistance";
+import { formatExpenseCategoryLabel } from "@/lib/expenses";
 
 const money = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -24,7 +27,7 @@ function formatMoney(amount: number | string, currency: string): string {
   }
 }
 
-export default async function AssistancePage({
+export default async function AssistanceListPage({
   searchParams,
 }: {
   searchParams: Promise<{ page?: string }>;
@@ -34,8 +37,8 @@ export default async function AssistancePage({
   const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
 
   const [{ count, sum }, { rows, totalCount, pageSize }] = await Promise.all([
-    getAssistanceConferenceSummary(),
-    getAssistancePage(page),
+    getNeighborAssistanceSummary(),
+    getExpensesPage(page, { scope: "neighbor" }),
   ]);
 
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
@@ -44,16 +47,16 @@ export default async function AssistancePage({
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="text-xl font-semibold text-foreground">Financial assistance</h2>
+          <h2 className="text-xl font-semibold text-foreground">Assistance</h2>
           <p className="mt-1 text-sm text-muted">
-            All grants and aid recorded for your conference, newest first.
+            Neighbor financial assistance for your conference, newest first.
           </p>
         </div>
         <Link
-          href="/assistance/new"
+          href="/neighbors"
           className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-foreground hover:opacity-90"
         >
-          Record assistance
+          Add from a neighbor
         </Link>
       </div>
 
@@ -97,11 +100,11 @@ export default async function AssistancePage({
                 rows.map((r) => (
                   <tr key={r.id} className="transition hover:bg-stone-50/80">
                     <td className="whitespace-nowrap px-4 py-3 tabular-nums text-foreground">
-                      {r.assistance_date}
+                      {r.expense_date}
                     </td>
                     <td className="px-4 py-3 font-medium text-foreground">{r.neighbor_name}</td>
                     <td className="max-w-[200px] px-4 py-3 text-muted">
-                      {formatAssistanceCategoryLabel(r.category)}
+                      {formatExpenseCategoryLabel(r.category)}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-right font-medium tabular-nums text-foreground">
                       {formatMoney(r.amount, r.currency)}
@@ -109,12 +112,14 @@ export default async function AssistancePage({
                     <td className="max-w-[140px] px-4 py-3 text-muted">{r.check_number ?? "—"}</td>
                     <td className="max-w-[160px] px-4 py-3 text-muted">{r.recorded_by_name ?? "—"}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-right">
-                      <Link
-                        href={`/neighbors/${r.neighbor_id}/assistance/${r.id}/edit`}
-                        className="text-xs font-medium text-accent hover:underline"
-                      >
-                        Edit
-                      </Link>
+                      {r.neighbor_id ? (
+                        <Link
+                          href={`/neighbors/${r.neighbor_id}/assistance/${r.id}/edit`}
+                          className="text-xs font-medium text-accent hover:underline"
+                        >
+                          Edit
+                        </Link>
+                      ) : null}
                     </td>
                   </tr>
                 ))

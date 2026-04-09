@@ -2,16 +2,20 @@ import type { ActivityRow } from "@/lib/data/dashboard";
 
 /** Path to the neighbor sub-page for this activity row. */
 export function activityViewHref(a: ActivityRow): string | null {
-  if (!a.neighbor_id) return null;
-  const base = `/neighbors/${a.neighbor_id}`;
   switch (a.activity_type) {
     case "visit":
-      return `${base}/visits`;
+      if (!a.neighbor_id) return null;
+      return `/neighbors/${a.neighbor_id}/visits`;
     case "call":
-      return `${base}/calls`;
+      if (!a.neighbor_id) return null;
+      return `/neighbors/${a.neighbor_id}/calls`;
     case "assistance":
-      return `${base}/assistance`;
+      if (!a.neighbor_id) return null;
+      return `/neighbors/${a.neighbor_id}/assistance`;
+    case "expense":
+      return "/expenses";
     default:
-      return base;
+      if (!a.neighbor_id) return null;
+      return `/neighbors/${a.neighbor_id}`;
   }
 }

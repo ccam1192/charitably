@@ -1,10 +1,6 @@
 import Link from "next/link";
+import { NeighborsListSection } from "@/components/neighbors/neighbors-list";
 import { getNeighborsWithAssistanceTotals } from "@/lib/data/neighbors";
-
-const money = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-});
 
 export default async function NeighborsPage({
   searchParams,
@@ -37,53 +33,7 @@ export default async function NeighborsPage({
         </div>
       ) : null}
 
-      <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="border-b border-border bg-stone-50 text-xs font-medium uppercase tracking-wide text-muted">
-              <tr>
-                <th className="px-4 py-3">Name</th>
-                <th className="px-4 py-3">Phone</th>
-                <th className="px-4 py-3">Address</th>
-                <th className="px-4 py-3 text-right">Assistance</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {rows.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="px-4 py-10 text-center text-muted">
-                    No neighbors yet.{" "}
-                    <Link href="/neighbors/new" className="text-accent underline-offset-2 hover:underline">
-                      Add the first one
-                    </Link>
-                    .
-                  </td>
-                </tr>
-              ) : (
-                rows.map((n) => (
-                  <tr key={n.id} className="transition hover:bg-stone-50/80">
-                    <td className="px-4 py-3 font-medium text-foreground">
-                      <Link
-                        href={`/neighbors/${n.id}`}
-                        className="text-accent hover:underline"
-                      >
-                        {n.full_name}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3 text-muted">{n.phone ?? "—"}</td>
-                    <td className="max-w-[220px] truncate px-4 py-3 text-muted" title={n.address ?? undefined}>
-                      {n.address?.trim() ? n.address : "—"}
-                    </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-foreground">
-                      {money.format(n.assistance_total)}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <NeighborsListSection rows={rows} />
     </div>
   );
 }

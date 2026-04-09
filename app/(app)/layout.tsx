@@ -21,7 +21,7 @@ export default async function AppLayout({
 
   const { data: member } = await supabase
     .from("users")
-    .select("chapter_id, chapters(name)")
+    .select("chapter_id, role, chapters(name)")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -36,9 +36,14 @@ export default async function AppLayout({
     | undefined;
   const chapter = Array.isArray(embedded) ? embedded[0] : embedded;
   const conferenceName = chapter?.name ?? "Your conference";
+  const isAdmin = member.role === "admin";
 
   return (
-    <AppShell conferenceName={conferenceName} userEmail={user.email ?? null}>
+    <AppShell
+      conferenceName={conferenceName}
+      userEmail={user.email ?? null}
+      isAdmin={isAdmin}
+    >
       {children}
     </AppShell>
   );
