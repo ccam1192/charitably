@@ -1,11 +1,8 @@
 import Link from "next/link";
-import type {
-  ActivityRow,
-  AssistanceRow,
-  FinancialStats,
-} from "@/lib/data/dashboard";
+import type { ActivityRow, AssistanceRow } from "@/lib/data/dashboard";
 import { activityViewHref } from "@/components/dashboard/activity-links";
 import { ActivityDot } from "@/components/dashboard/activity-dot";
+import { DashboardQuickActions } from "@/components/dashboard/dashboard-quick-actions";
 import { StatWidget } from "@/components/dashboard/stat-widget";
 import { MyTasksWidget } from "@/components/dashboard/my-tasks-widget";
 import type { TaskListRow } from "@/lib/data/tasks";
@@ -30,24 +27,21 @@ function toAmount(v: number | string): number {
 }
 
 type Props = {
-  stats: FinancialStats | null;
   activity: ActivityRow[];
   assistanceRows: AssistanceRow[];
   rpcMissing: boolean;
   neighborCount: number;
   myTasks: TaskListRow[];
-  /** When false, hide conference financial totals (volunteers). */
-  showFinancialSummary?: boolean;
+  myOpenTaskCount: number;
 };
 
 export function DashboardOverview({
-  stats,
   activity,
   assistanceRows,
   rpcMissing,
   neighborCount,
   myTasks,
-  showFinancialSummary = true,
+  myOpenTaskCount,
 }: Props) {
   return (
     <div className="space-y-10">
@@ -61,35 +55,21 @@ export function DashboardOverview({
         </p>
       ) : null}
 
+      <DashboardQuickActions />
+
       <section>
         <h2 className="text-sm font-medium uppercase tracking-wide text-muted">Overview</h2>
-        <div
-          className={`mt-3 grid gap-3 sm:grid-cols-2 ${showFinancialSummary ? "xl:grid-cols-4" : "xl:grid-cols-1 max-w-md"}`}
-        >
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <StatWidget
             label="Active neighbors"
             value={String(neighborCount)}
             viewAllHref="/neighbors"
           />
-          {showFinancialSummary ? (
-            <>
-              <StatWidget
-                label="Expenses (this month)"
-                value={stats ? money.format(stats.expenses_this_month) : "—"}
-                viewAllHref="/expenses"
-              />
-              <StatWidget
-                label="Expenses (all-time)"
-                value={stats ? money.format(stats.expenses_all_time) : "—"}
-                viewAllHref="/expenses"
-              />
-              <StatWidget
-                label="Donations (all-time)"
-                value={stats ? money.format(stats.donations_all_time) : "—"}
-                viewAllHref="/donations"
-              />
-            </>
-          ) : null}
+          <StatWidget
+            label="My open tasks"
+            value={String(myOpenTaskCount)}
+            viewAllHref="/tasks"
+          />
         </div>
       </section>
 

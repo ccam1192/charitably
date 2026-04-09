@@ -175,3 +175,16 @@ export async function getMyPendingTasks(userId: string, limit = 5): Promise<Task
 
   return mapTasks(tasks, userNames, neighborNames);
 }
+
+/** Count of pending tasks assigned to the user (for dashboard stats). */
+export async function getMyPendingTaskCount(userId: string): Promise<number> {
+  const supabase = await createClient();
+  const { count, error } = await supabase
+    .from("tasks")
+    .select("id", { count: "exact", head: true })
+    .eq("assigned_to", userId)
+    .eq("status", "pending");
+
+  if (error) return 0;
+  return count ?? 0;
+}
