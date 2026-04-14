@@ -46,10 +46,7 @@ export function TrustSection() {
           </div>
 
           <div>
-            <div className="text-sm font-semibold">Testimonials</div>
-            <div className="mt-2 text-sm text-muted">Placeholder layout—real quotes coming soon.</div>
-
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2">
               <TestimonialPlaceholder />
               <TestimonialPlaceholder />
               <TestimonialPlaceholder />

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createServiceRoleClientIfConfigured } from "@/lib/supabase/admin";
 
 type Payload = {
   name: string;
@@ -27,14 +28,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing or invalid fields" }, { status: 400 });
   }
 
-  // Minimal handling for now: log server-side so it's captured in server logs.
-  console.log("[request-access]", {
+  const supabase = createServiceRoleClientIfConfigured();
+  if (!supabase) {
+    console.error("[request-access] SUPABASE_SERVICE_ROLE_KEY is not set; cannot store submission");
+    return NextResponse.json(
+      { error: "Contact form is not configured on the server. Please try again later." },
+      { status: 503 },
+    );
+  }
+
+  const { error } = await supabase.from("access_requests").insert({
     name,
     email,
     organization,
-    message: message.length ? message : undefined,
-    submittedAt: new Date().toISOString(),
+    message: message.length > 0 ? message : null,
   });
+
+  if (error) {
+    console.error("[request-access] insert failed", error);
+    return NextResponse.json({ error: "Could not save your request. Please try again." }, { status: 500 });
+  }
 
   return NextResponse.json({ ok: true });
 }

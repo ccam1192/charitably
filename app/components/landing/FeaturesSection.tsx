@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Container, Section } from "./Section";
 
 type Feature = {
@@ -45,6 +46,90 @@ function FeatureMock() {
   );
 }
 
+function AssistanceScreenshot() {
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-border bg-white shadow-sm">
+      <div className="border-b border-border bg-stone-50 px-4 py-3">
+        <div className="h-2.5 w-32 rounded bg-stone-200" />
+      </div>
+      <div className="relative">
+        <Image
+          src="/feature-assistance.png"
+          alt="Assistance tracking: totals and assistance records table"
+          width={1024}
+          height={539}
+          className="h-auto w-full"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-amber-200/10 via-transparent to-transparent" />
+      </div>
+    </div>
+  );
+}
+
+function NeighborManagementScreenshot() {
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-border bg-white shadow-sm">
+      <div className="border-b border-border bg-stone-50 px-4 py-3">
+        <div className="h-2.5 w-36 rounded bg-stone-200" />
+      </div>
+      <div className="relative">
+        <Image
+          src="/feature-neighbors.png"
+          alt="Neighbor management: searchable neighbor list with primary need and assistance totals"
+          width={1024}
+          height={654}
+          className="h-auto w-full"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-amber-200/10 via-transparent to-transparent" />
+      </div>
+    </div>
+  );
+}
+
+function VisitsCallsScreenshot() {
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-border bg-white shadow-sm">
+      <div className="border-b border-border bg-stone-50 px-4 py-3">
+        <div className="h-2.5 w-36 rounded bg-stone-200" />
+      </div>
+      <div className="relative">
+        <Image
+          src="/feature-visits-calls.png"
+          alt="Visit and call tracking: visit history with notes and next steps"
+          width={1024}
+          height={400}
+          className="h-auto w-full"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-amber-200/10 via-transparent to-transparent" />
+      </div>
+    </div>
+  );
+}
+
+function TaskManagementScreenshot() {
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-border bg-white shadow-sm">
+      <div className="border-b border-border bg-stone-50 px-4 py-3">
+        <div className="h-2.5 w-32 rounded bg-stone-200" />
+      </div>
+      <div className="relative">
+        <Image
+          src="/feature-tasks.png"
+          alt="Task management: tasks list with assignment and due dates"
+          width={1024}
+          height={544}
+          className="h-auto w-full"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-amber-200/10 via-transparent to-transparent" />
+      </div>
+    </div>
+  );
+}
+
 export function FeaturesSection() {
   return (
     <Section id="features" className="border-y border-border/60 bg-white">
@@ -73,7 +158,17 @@ export function FeaturesSection() {
               </div>
 
               <div className="mt-6">
-                <FeatureMock />
+                {feature.title === "Neighbor Management" ? (
+                  <NeighborManagementScreenshot />
+                ) : feature.title === "Visit & Call Tracking" ? (
+                  <VisitsCallsScreenshot />
+                ) : feature.title === "Assistance Tracking" ? (
+                  <AssistanceScreenshot />
+                ) : feature.title === "Task Management" ? (
+                  <TaskManagementScreenshot />
+                ) : (
+                  <FeatureMock />
+                )}
               </div>
             </div>
           ))}

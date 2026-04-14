@@ -6,7 +6,6 @@ import { LogoWordmark } from "./Logo";
 const navItems = [
   { href: "#features", label: "Features" },
   { href: "#how", label: "How it works" },
-  { href: "#trust", label: "Trust" },
 ];
 
 export function LandingHeader() {
@@ -30,12 +29,12 @@ export function LandingHeader() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <a
-            href="#contact"
-            className="hidden rounded-md px-3 py-2 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground sm:inline-flex"
+          <Link
+            href="/login"
+            className="inline-flex items-center rounded-md px-3 py-2 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
           >
-            Learn more
-          </a>
+            Log In
+          </Link>
           <a
             href="#contact"
             className="inline-flex items-center justify-center rounded-md bg-accent px-3.5 py-2 text-sm font-semibold text-accent-foreground shadow-sm shadow-amber-900/10 transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"

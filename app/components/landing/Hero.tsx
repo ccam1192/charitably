@@ -1,60 +1,21 @@
+import Image from "next/image";
 import { Container, Section } from "./Section";
 
-function MockScreenshotCard() {
+function HeroProductScreenshot() {
   return (
     <div className="relative">
       <div className="absolute -inset-6 -z-10 rounded-3xl bg-gradient-to-b from-amber-200/35 via-transparent to-transparent blur-2xl" />
 
-      <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-[0_20px_60px_-35px_rgba(0,0,0,0.25)]">
-        <div className="flex items-center justify-between border-b border-border bg-stone-50 px-4 py-3">
-          <div className="flex items-center gap-2">
-            <div className="size-2 rounded-full bg-stone-300" />
-            <div className="size-2 rounded-full bg-stone-300" />
-            <div className="size-2 rounded-full bg-stone-300" />
-          </div>
-          <div className="text-xs font-medium text-muted">Charitably</div>
-          <div className="text-xs text-muted">Demo</div>
-        </div>
-
-        <div className="p-4 sm:p-5">
-          <div className="grid grid-cols-12 gap-3">
-            <div className="col-span-5 rounded-lg border border-border bg-white p-3 shadow-sm">
-              <div className="mb-2 h-2.5 w-24 rounded bg-stone-200" />
-              <div className="space-y-2">
-                <div className="h-2 w-full rounded bg-stone-100" />
-                <div className="h-2 w-10/12 rounded bg-stone-100" />
-                <div className="h-2 w-9/12 rounded bg-stone-100" />
-              </div>
-              <div className="mt-3 h-8 rounded-md bg-amber-100" />
-            </div>
-
-            <div className="col-span-7 rounded-lg border border-border bg-white p-3 shadow-sm">
-              <div className="mb-2 flex items-center justify-between">
-                <div className="h-2.5 w-28 rounded bg-stone-200" />
-                <div className="h-6 w-20 rounded-md bg-stone-100" />
-              </div>
-              <div className="space-y-2">
-                <div className="h-10 rounded-md border border-border bg-stone-50" />
-                <div className="h-10 rounded-md border border-border bg-stone-50" />
-                <div className="h-10 rounded-md border border-border bg-stone-50" />
-              </div>
-              <div className="mt-3 grid grid-cols-3 gap-2">
-                <div className="h-16 rounded-md border border-border bg-white" />
-                <div className="h-16 rounded-md border border-border bg-white" />
-                <div className="h-16 rounded-md border border-border bg-white" />
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-4 rounded-lg border border-border bg-stone-50 p-3">
-            <div className="mb-2 h-2.5 w-40 rounded bg-stone-200" />
-            <div className="grid grid-cols-3 gap-2">
-              <div className="h-9 rounded-md bg-white" />
-              <div className="h-9 rounded-md bg-white" />
-              <div className="h-9 rounded-md bg-white" />
-            </div>
-          </div>
-        </div>
+      <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-[0_20px_60px_-35px_rgba(0,0,0,0.25)] ring-1 ring-black/5">
+        <Image
+          src="/hero-dashboard.png"
+          alt="Charitably Operations dashboard: neighbors, tasks, visits, and assistance"
+          width={1024}
+          height={646}
+          className="h-auto w-full"
+          priority
+          sizes="(max-width: 1024px) 100vw, 50vw"
+        />
       </div>
     </div>
   );
@@ -111,7 +72,7 @@ export function Hero() {
           </div>
 
           <div className="lg:justify-self-end">
-            <MockScreenshotCard />
+            <HeroProductScreenshot />
           </div>
         </div>
       </Container>
