@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { sendAccessRequestNotification } from "@/lib/email/send-access-request-notification";
 import { createServiceRoleClientIfConfigured } from "@/lib/supabase/admin";
 
 type Payload = {
@@ -47,6 +48,17 @@ export async function POST(req: Request) {
   if (error) {
     console.error("[request-access] insert failed", error);
     return NextResponse.json({ error: "Could not save your request. Please try again." }, { status: 500 });
+  }
+
+  try {
+    await sendAccessRequestNotification({
+      name,
+      email,
+      organization,
+      message: message.length > 0 ? message : null,
+    });
+  } catch (err) {
+    console.error("[request-access] notification email failed", err);
   }
 
   return NextResponse.json({ ok: true });
