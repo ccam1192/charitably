@@ -3,18 +3,19 @@ import { Container, Section } from "./Section";
 
 function HeroProductScreenshot() {
   return (
-    <div className="relative">
+    <div className="relative w-full min-w-0">
       <div className="absolute -inset-6 -z-10 rounded-3xl bg-gradient-to-b from-amber-200/35 via-transparent to-transparent blur-2xl" />
 
       <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-[0_20px_60px_-35px_rgba(0,0,0,0.25)] ring-1 ring-black/5">
+        {/* Intrinsic 1024×462; unoptimized keeps the PNG crisp (no WebP recompression on dense UI text). */}
         <Image
           src="/hero-dashboard.png"
           alt="Charitably Operations dashboard: neighbors, tasks, visits, and assistance"
           width={1024}
-          height={646}
+          height={462}
           className="h-auto w-full"
           priority
-          sizes="(max-width: 1024px) 100vw, 50vw"
+          unoptimized
         />
       </div>
     </div>
@@ -25,8 +26,8 @@ export function Hero() {
   return (
     <Section className="pt-14 sm:pt-16">
       <Container>
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div>
+        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.28fr)] lg:gap-14">
+          <div className="min-w-0">
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1 text-xs font-medium text-muted shadow-sm">
               Built for conference volunteers
               <span className="h-1 w-1 rounded-full bg-stone-300" />
@@ -71,7 +72,7 @@ export function Hero() {
             </dl>
           </div>
 
-          <div className="lg:justify-self-end">
+          <div className="w-full min-w-0 lg:justify-self-stretch">
             <HeroProductScreenshot />
           </div>
         </div>
