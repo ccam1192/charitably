@@ -7,12 +7,12 @@ function HeroProductScreenshot() {
       <div className="absolute -inset-6 -z-10 rounded-3xl bg-gradient-to-b from-amber-200/35 via-transparent to-transparent blur-2xl" />
 
       <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-[0_20px_60px_-35px_rgba(0,0,0,0.25)] ring-1 ring-black/5">
-        {/* Intrinsic 1024×462; unoptimized keeps the PNG crisp (no WebP recompression on dense UI text). */}
+        {/* SVG from design export (2000×1600); unoptimized avoids Next rasterizing SVG. */}
         <Image
-          src="/hero-dashboard.png"
+          src="/hero-dashboard.svg"
           alt="Charitably Operations dashboard: neighbors, tasks, visits, and assistance"
-          width={1024}
-          height={462}
+          width={2000}
+          height={1600}
           className="h-auto w-full"
           priority
           unoptimized
